@@ -27,23 +27,20 @@ int inputLoop() {
 
 int *arrayLoop(int maxValue) {
 	int *buildArray = new int[maxValue];
-	int *boolArray = new int[maxValue];
 
 	for(int i = 0; i < maxValue; i += 1) {
 		buildArray[i] = i + 2;
-		boolArray[i] = 1;
 	}
 
 	for(int i = 0; i < maxValue - 1; i += 1) {
 		int buildi = buildArray[i];
 
-		if(boolArray[i] == 1) {
+		if(buildi != 0) {
 			for(int k = 1; k < maxValue; k += 1) {
 				int convertToZero = buildi*k + i;
 
 				if(convertToZero <= maxValue) {
-					boolArray[convertToZero] = 0;
-					// This may have overflow issues
+					buildArray[convertToZero] = 0;
 				}
 
 				else {
@@ -53,11 +50,7 @@ int *arrayLoop(int maxValue) {
 		}
 	}
 
-	int *primeZeroArray = new int[maxValue];
-
-	for(int i = 0; i < maxValue; i += 1) {
-		primeZeroArray[i] = boolArray[i]*buildArray[i];
-	}
+	int *primeZeroArray = buildArray;
 
 	primeZeroArray[maxValue - 1] = -1;
 
@@ -98,7 +91,7 @@ void setup() {
 		while(arrayBuffer != -1) {
 			if(arrayBuffer != 0) {
 				Serial.print(arrayBuffer);
-				Serial.print(", ");
+				Serial.print(" ");
 			}
 
 			i += 1;
