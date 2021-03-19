@@ -3,16 +3,20 @@
 
 
 static int *primeZeroArray;
+static unsigned int primeArrayIndex;
+static int arrayBuffer;
 
 
 int inputLoop() {
-	int userInput = 0;
+
+	String inputString;
 
 	while(true) {
 		if(Serial.available() > 0) {
-			userInput = Serial.parseInt();
+			inputString = Serial.readStringUntil('\n');
 			Serial.print("You input: ");
-			Serial.println(userInput);
+			Serial.print(inputString);
+			Serial.println();
 			break;
 		}
 
@@ -21,23 +25,26 @@ int inputLoop() {
 		}
 	}
 
-	return userInput;
+	return inputString.toInt();
 }
 
 
 int *arrayLoop(int maxValue) {
 	int *buildArray = new int[maxValue];
+	int buildi = 0;
+	int k = 0;
+	int convertToZero = 0;
 
 	for(int i = 0; i < maxValue; i += 1) {
 		buildArray[i] = i + 2;
 	}
 
 	for(int i = 0; i < maxValue - 1; i += 1) {
-		int buildi = buildArray[i];
+		buildi = buildArray[i];
 
 		if(buildi != 0) {
-			for(int k = 1; k < maxValue; k += 1) {
-				int convertToZero = buildi*k + i;
+			for(k = 1; k < maxValue; k += 1) {
+				convertToZero = buildi*k + i;
 
 				if(convertToZero <= maxValue) {
 					buildArray[convertToZero] = 0;
@@ -60,9 +67,10 @@ int *arrayLoop(int maxValue) {
 
 void askMaxAndCreateArray() {
 	Serial.println("Please input a positive integer >= 2.");
+	int maxValue = 0;
 
 	while(true) {
-		int maxValue = inputLoop();
+		maxValue = inputLoop();
 
 		if(maxValue < 2) {
 			Serial.println("Please make sure your input is >= 2.");
@@ -81,28 +89,24 @@ void setup() {
 	while(!Serial) {
 		delay(250);
 	}
-
-	while(true) {
-		askMaxAndCreateArray();
-
-		int i = 0;
-		int arrayBuffer = primeZeroArray[i];
-
-		while(arrayBuffer != -1) {
-			if(arrayBuffer != 0) {
-				Serial.print(arrayBuffer);
-				Serial.print(" ");
-			}
-
-			i += 1;
-			arrayBuffer = primeZeroArray[i];
-		}
-
-	Serial.println();
-	}
 }
 
 
 void loop() {
+	askMaxAndCreateArray();
 
+	primeArrayIndex = 0;
+	arrayBuffer = primeZeroArray[primeArrayIndex];
+
+	while(arrayBuffer != -1) {
+		if(arrayBuffer != 0) {
+			Serial.print(arrayBuffer);
+			Serial.print(" ");
+		}
+
+		primeArrayIndex += 1;
+		arrayBuffer = primeZeroArray[primeArrayIndex];
+	}
+
+	Serial.println('\n');
 }
